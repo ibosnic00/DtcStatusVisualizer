@@ -1,0 +1,92 @@
+﻿<Window x:Class="DtcStatusVisualizer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DtcStatusVisualizer"
+        xmlns:utility="clr-namespace:DtcStatusVisualizer.Utility"
+        xmlns:vm="clr-namespace:DtcStatusVisualizer.ViewModel"
+        xmlns:converters="clr-namespace:DtcStatusVisualizer.Converters"
+        mc:Ignorable="d"
+        Title="DTC Status Visualizer"
+        Height="400"
+        Width="500"
+        DataContext="{Binding MainVM, Source={StaticResource locator}}"
+        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <ResourceDictionary>
+            <converters:NumberToHexStringConverter x:Key="numberToHexConverter" />
+            <converters:NumberToBinaryStringConverter x:Key="numberToBinaryConverter" />
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition />
+            <ColumnDefinition Width="10" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Text="DTC Value"
+                   FontSize="25"
+                   FontWeight="Bold" />
+
+        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel Margin="20 2">
+                <TextBlock Text="Hexadecimal" HorizontalAlignment="Center"/>
+                <TextBox Text="{Binding DtcStatus, Converter={StaticResource numberToHexConverter}, UpdateSourceTrigger=PropertyChanged}"
+                         Width="22"
+                         Padding="2" 
+                         HorizontalContentAlignment="Center" />
+            </StackPanel>
+            <StackPanel Margin="20 2">
+                <TextBlock Text="Decimal" HorizontalAlignment="Center"/>
+                <TextBox Text="{Binding DtcStatus, UpdateSourceTrigger=PropertyChanged}"
+                         Width="30"
+                         Padding="2"
+                         HorizontalContentAlignment="Center" />
+            </StackPanel>
+            <StackPanel Margin="20 2">
+                <TextBlock Text="Binary" HorizontalAlignment="Center"/>
+                <TextBox Text="{Binding DtcStatus, Converter={StaticResource numberToBinaryConverter}, UpdateSourceTrigger=PropertyChanged}"
+                         Width="65"
+                         Padding="2"
+                         HorizontalContentAlignment="Center" />
+            </StackPanel>
+        </StackPanel>
+
+        <TextBlock Grid.Row="3"
+                   Grid.Column="1"
+                   HorizontalAlignment="Center"
+                   Margin="0 20 0 0"
+                   Text="DTC Status Bits"
+                   FontSize="25"
+                   FontWeight="Bold" />
+        <ListBox Grid.Row="4"
+                 Grid.Column="1"
+                 ItemsSource="{Binding DtcStatusBits, UpdateSourceTrigger=PropertyChanged}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="{Binding Description}"
+                                   FontSize="16"
+                                   FontWeight="DemiBold"
+                                   Foreground="{Binding Color}">
+                            
+                        </TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>   
+
+    </Grid>
+
+</Window>
